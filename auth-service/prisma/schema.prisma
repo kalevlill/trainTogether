@@ -9,11 +9,11 @@ datasource db {
 
 
 model User {
-  id        String   @id @default(uuid())  // Eindeutige ID
-  email     String   @unique               // Login-Identifikation
-  password  String                         // Gehashter Passwort-Hash (bcrypt)
-  name      String                         // Anzeigename
-  location  String?                        // Optionaler Standort
-  createdAt DateTime @default(now())       // Wann wurde der Nutzer erstellt
+  id        String   @id @default(uuid())  
+  email     String   @unique               
+  password  String                        
+  name      String                         
+  location  String?                      
+  createdAt DateTime @default(now())       
 }
 
