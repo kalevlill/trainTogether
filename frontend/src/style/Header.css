@@ -1,0 +1,43 @@
+.logo-img {
+    object-fit: contain;
+    height: 60px;
+    transform: scale(3.5);
+    transform-origin: left center;
+    padding-left: 40px;
+    margin: 0;
+    padding: 0;
+    margin-left: 20px;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 20px;
+    z-index: 1000;
+    box-sizing: border-box;
+}
+
+.nav-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.login-btn, .signup-btn {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.login-btn {
+    color: #39A9CB;
+}
+
+.signup-btn {
+    color: #FFEDA3;
+}

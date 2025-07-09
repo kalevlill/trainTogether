@@ -22,7 +22,7 @@ const getUserMatches: RequestHandler<{ userId: string }> = async (req, res): Pro
 })
 
   if (!currentUser) {
-    res.status(404).json({ error: 'User nicht gefunden' });
+    res.status(404).json({ error: 'User is not found' });
   }
 
   const matches = await prisma.user.findMany({
