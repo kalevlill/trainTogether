@@ -25,8 +25,12 @@ function Auth({ type = "login", onClose }) {
 };
 
 const handleClose = () => {
-    navigate("/"); 
-  };
+  if (onClose) {
+    onClose();            
+  } else {
+    navigate("/");       
+  }
+};
 
   return (
     <div className="modal-overlay">
