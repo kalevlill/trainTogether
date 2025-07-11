@@ -1,12 +1,37 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  postgres:
-    image: postgres:15
+  db:
+    image: postgres
     restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: traintogether
+      POSTGRES_USER: trainuser
+      POSTGRES_PASSWORD: trainpassword
+      POSTGRES_DB: traindb
     ports:
       - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trainuser -d traindb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    
+
+  backend:
+    build: ./backend
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/prisma:/app/prisma
+      - ./backend/.env:/app/.env
+    environment:
+      - DATABASE_URL=postgresql://trainuser:trainpassword@db:5432/traindb
+      - JWT_SECRET=0eb8ca4930f829d526452d8e48f2f753d0e01c627ec3d4d7d92d69b0bf285a30
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
