@@ -6,15 +6,16 @@ export const UserContext = createContext();
 export function UserProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState(() => localStorage.getItem("token"));
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setLoading(false);
-        return;
-      }
+    if (!token) {
+      setUser(null);
+      setLoading(false);
+      return;
+    }
 
+    const fetchProfile = async () => {
       try {
         const res = await axios.get("http://localhost:4000/api/profile", {
           headers: { Authorization: `Bearer ${token}` },
@@ -22,19 +23,22 @@ export function UserProvider({ children }) {
         setUser(res.data.user);
       } catch {
         localStorage.removeItem("token");
+        setUser(null);
       }
       setLoading(false);
     };
 
     fetchProfile();
-  }, []);
+  }, [token]);
+
   const logout = () => {
     localStorage.removeItem("token");
+    setToken(null);
     setUser(null);
   };
 
   return (
-    <UserContext.Provider value={{ user, setUser, loading, logout }}>
+    <UserContext.Provider value={{ user, setUser, loading, logout, setToken }}>
       {children}
     </UserContext.Provider>
   );

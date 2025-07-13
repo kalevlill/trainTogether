@@ -12,7 +12,7 @@ function Auth({ onClose }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [errorMessage, setErrorMessage] = useState("");
-  const { setUser } = useContext(UserContext);
+  const { setUser, setToken } = useContext(UserContext);
 
   const type = location.pathname === "/register" ? "register" : "login";
 
@@ -48,6 +48,7 @@ function Auth({ onClose }) {
       setErrorMessage("");
       if (type === "login") {
         localStorage.setItem("token", response.data.token);
+        setToken(response.data.token);
         setUser(response.data.user);
         if (onClose) onClose();
       }
