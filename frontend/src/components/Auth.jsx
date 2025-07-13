@@ -16,6 +16,14 @@ function Auth({ onClose }) {
 
   const type = location.pathname === "/register" ? "register" : "login";
 
+  const handleClose = () => {
+    if (onClose) {
+      onClose();
+    } else {
+      navigate("/");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -46,11 +54,12 @@ function Auth({ onClose }) {
       );
 
       setErrorMessage("");
+
       if (type === "login") {
         localStorage.setItem("token", response.data.token);
         setToken(response.data.token);
         setUser(response.data.user);
-        if (onClose) onClose();
+        handleClose();
       }
 
       navigate("/");
@@ -63,7 +72,7 @@ function Auth({ onClose }) {
   return (
     <div className="modal-overlay">
       <div className="modal">
-        <button className="close-btn" onClick={onClose}>×</button>
+        <button className="close-btn" onClick={handleClose}>×</button>
         <img src={Logo} alt="Train Together Logo" className="auth-logo" />
 
         <form onSubmit={handleSubmit}>
