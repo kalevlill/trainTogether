@@ -1,11 +1,11 @@
+import "../style/Footer.css";
+
 function Footer() {
-    return (
-        <footer className="footer">
-            <div className="container">
-                <p className="text-muted">© 2025 TrainTogether. All rights reserved.</p>
-            </div>
-        </footer>
-    );
+  return (
+    <footer className="footer">
+      <p className="text-muted">© 2025 TrainTogether. All rights reserved.</p>
+    </footer>
+  );
 }
 
 export default Footer;
