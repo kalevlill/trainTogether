@@ -1,0 +1,87 @@
+.yellow-text {
+    color: #FFEDA3;
+}
+.blue-text {
+    color: #2940D3;
+}
+
+.body-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px;
+    min-height: calc(100vh - );
+}
+
+.partner-text {
+     flex: 1;
+    max-width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.partner-text h1 {
+    font-size: 3.5rem; 
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+
+.partner-text p {
+    font-size: 1.25rem; 
+    line-height: 1.5;
+    margin-bottom: 30px;
+    max-width: 400px;
+}
+
+.training-image {
+    flex: 1;
+    max-width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.training-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.get-started-btn {
+    background-color: #2940D3;
+    color: #FFEDA3;
+    font-weight: bold;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.icon-row {
+  display: flex;
+  justify-content: center;
+  gap: 100px;
+  margin-top: 20px;
+  padding: 20px 0;
+}
+
+.icon-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+}
+
+.icon-item p {
+  margin-top: 8px;
+  font-size: 1rem;
+}
+
+.icon-row svg {
+  color: white; 
+}
