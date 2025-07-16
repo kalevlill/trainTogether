@@ -11,7 +11,13 @@ model User {
   id        Int      @id @default(autoincrement())
   firstName String
   lastName  String
+  birthday  DateTime?
+  gender    String?
   email     String   @unique
   password  String
+  location  String?
+  level     String?
+  sports    Json?
+  profilePicturePath String?
   createdAt DateTime @default(now())
 }

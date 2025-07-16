@@ -1,22 +1,28 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Logo from "../images/Logo.png";
 import "../style/Header.css";
 import Auth from "./Auth";
 import { UserContext } from "./context/UserContext";
-import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
   const { user, logout } = useContext(UserContext);
   const [authType, setAuthType] = useState(null);
+  const navigate = useNavigate();
 
-   useEffect(() => {
+  useEffect(() => {
     if (user) {
-      setAuthType(null); 
+      setAuthType(null);
     }
   }, [user]);
 
   const openModal = (type) => setAuthType(type);
   const closeModal = () => setAuthType(null);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/"); 
+  };
 
   return (
     <header className="header">
@@ -25,7 +31,7 @@ function Header() {
         {user ? (
           <>
             <span>Welcome, {user.firstName}</span>
-            <button className="logout-btn" onClick={logout}>Logout</button>
+            <button className="logout-btn" onClick={handleLogout}>Logout</button>
           </>
         ) : (
           <button className="login-btn" onClick={() => openModal("login")}>

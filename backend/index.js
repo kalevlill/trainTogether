@@ -4,14 +4,17 @@ const { PrismaClient } = require('@prisma/client');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const userRoutes = require('./src/routes/user');
 
 const prisma = new PrismaClient();
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use('/api/user', userRoutes);
+console.log('User routes mounted');
 
-// ✅ JWT Middleware
+//  JWT Middleware
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) return res.status(401).json({ error: "Access denied" });
@@ -26,8 +29,17 @@ const verifyToken = (req, res, next) => {
 };
 
 // Protected route
-app.get('/api/profile', verifyToken, (req, res) => {
-  res.json({ message: `Welcome ${req.user.firstName}!`, user: req.user });
+app.get('/api/profile', verifyToken, async (req, res) => {
+  const user = await prisma.user.findUnique({
+    where: { id: req.user.userId },
+  });
+
+  const onboardingComplete = user.location && user.sports && user.profilePicturePath;
+
+  res.json({
+    user,
+    onboardingComplete: Boolean(onboardingComplete),
+  });
 });
 
 // Test route

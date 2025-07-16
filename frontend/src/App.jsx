@@ -6,6 +6,9 @@ import Layout from "./Layout/Layout";
 import RegisterPage from "./pages/RegisterPage";
 import Auth from "./components/Auth";
 import { UserProvider } from "./components/context/UserContext";
+import Onboarding from "./pages/Onboarding";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
@@ -14,8 +17,24 @@ function App() {
         <Layout>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/register" element={<Auth type="register" />} />
+            <Route path="/register" element={<Auth />} />
             <Route path="/login" element={<Auth type="login" />} />
+            <Route
+              path="/onboarding"
+              element={
+                <ProtectedRoute>
+                  <Onboarding />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </Layout>
       </BrowserRouter>

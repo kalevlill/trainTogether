@@ -47,22 +47,26 @@ function Auth({ onClose }) {
 
     try {
       const endpoint = type === "login" ? "/api/login" : "/api/register";
-
-      const response = await axios.post(
-        `http://localhost:4000${endpoint}`,
-        payload
-      );
+      const response = await axios.post(`http://localhost:4000${endpoint}`, payload);
 
       setErrorMessage("");
 
-      if (type === "login") {
+      if (type === "register") {
+        const loginResponse = await axios.post("http://localhost:4000/api/login", {
+          email,
+          password,
+        });
+
+        localStorage.setItem("token", loginResponse.data.token);
+        setToken(loginResponse.data.token);
+        setUser(loginResponse.data.user);
+        navigate("/onboarding");
+      } else {
         localStorage.setItem("token", response.data.token);
         setToken(response.data.token);
         setUser(response.data.user);
         handleClose();
       }
-
-      navigate("/");
     } catch (err) {
       console.error(err.response?.data || err);
       setErrorMessage(err.response?.data?.error || "An error occurred.");
@@ -97,19 +101,20 @@ function Auth({ onClose }) {
           <button><FaFacebook size={40} /></button>
           <button><FaApple size={40} /></button>
         </div>
+
         {type === "login" ? (
-  <div className="register-section">
-    <button className="register-btn" onClick={() => navigate("/register")}>
-      Register
-    </button>
-  </div>
-) : (
-  <div className="register-section">
-    <button className="register-btn" onClick={() => navigate("/login")}>
-      Already have an account? Login
-    </button>
-  </div>
-)}
+          <div className="register-section">
+            <button className="register-btn" onClick={() => navigate("/register")}>
+              Register
+            </button>
+          </div>
+        ) : (
+          <div className="register-section">
+            <button className="register-btn" onClick={() => navigate("/login")}>
+              Already have an account? Login
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
