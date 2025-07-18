@@ -26,6 +26,7 @@
 .nav-links {
     display: flex;
     gap: 1rem;
+    margin-right: 7%;
 }
 
 .login-btn, .signup-btn {
@@ -41,4 +42,50 @@
 
 .signup-btn {
     color: #FFEDA3;
+}
+
+.user-menu {
+    position: relative;
+    cursor: pointer;
+    margin-left: auto;
+    border: 1px solid #FFEDA3;
+    border-radius: 9999px;
+    padding: 0.4rem 2rem;
+}
+
+.user-menu span {
+    color: white;
+    font-weight: 500;
+}
+
+.dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1e1e1e;
+    padding: 10px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 120px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid #FFEDA3;
+    border-radius: 12px;
+}
+
+.dropdown button {
+    background: none;
+    border: none;
+    color: white;
+    text-align: left;
+    padding: 8px 10px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.dropdown button:hover {
+    background: #39A9CB;
 }

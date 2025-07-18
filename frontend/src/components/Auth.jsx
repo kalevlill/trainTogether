@@ -25,53 +25,56 @@ function Auth({ onClose }) {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const formData = new FormData(e.target);
-    const email = formData.get("email");
-    const password = formData.get("password");
-    const confirmPassword = formData.get("confirmPassword");
-    const firstName = formData.get("firstName");
-    const lastName = formData.get("lastName");
+  const formData = new FormData(e.target);
+  const email = formData.get("email");
+  const password = formData.get("password");
+  const confirmPassword = formData.get("confirmPassword");
+  const firstName = formData.get("firstName");
+  const lastName = formData.get("lastName");
 
-    if (type === "register" && password !== confirmPassword) {
-      setErrorMessage("Passwords do not match.");
-      return;
-    }
+  if (type === "register" && password !== confirmPassword) {
+    setErrorMessage("Passwords do not match.");
+    return;
+  }
 
-    const payload = {
-      email,
-      password,
-      ...(type === "register" && { firstName, lastName }),
-    };
-
-    try {
-      const endpoint = type === "login" ? "/api/login" : "/api/register";
-      const response = await axios.post(`http://localhost:4000${endpoint}`, payload);
-
-      setErrorMessage("");
-
-      if (type === "register") {
-        const loginResponse = await axios.post("http://localhost:4000/api/login", {
-          email,
-          password,
-        });
-
-        localStorage.setItem("token", loginResponse.data.token);
-        setToken(loginResponse.data.token);
-        setUser(loginResponse.data.user);
-        navigate("/onboarding");
-      } else {
-        localStorage.setItem("token", response.data.token);
-        setToken(response.data.token);
-        setUser(response.data.user);
-        handleClose();
-      }
-    } catch (err) {
-      console.error(err.response?.data || err);
-      setErrorMessage(err.response?.data?.error || "An error occurred.");
-    }
+  const payload = {
+    email,
+    password,
+    ...(type === "register" && { firstName, lastName }),
   };
+
+  try {
+    if (type === "register") {
+      await axios.post("http://localhost:4000/api/register", payload);
+
+      const loginResponse = await axios.post("http://localhost:4000/api/login", {
+        email,
+        password,
+      });
+
+      localStorage.setItem("token", loginResponse.data.token);
+      setToken(loginResponse.data.token);
+      setUser(loginResponse.data.user);
+      navigate("/onboarding");
+    }
+
+    if (type === "login") {
+      const loginResponse = await axios.post("http://localhost:4000/api/login", payload);
+
+      localStorage.setItem("token", loginResponse.data.token);
+      setToken(loginResponse.data.token);
+      setUser(loginResponse.data.user);
+      navigate("/dashboard");
+    }
+
+    setErrorMessage("");
+  } catch (err) {
+    console.error(err.response?.data || err);
+    setErrorMessage(err.response?.data?.error || "An error occurred.");
+  }
+};
 
   return (
     <div className="modal-overlay">

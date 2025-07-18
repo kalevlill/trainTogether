@@ -11,36 +11,9 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use('/uploads', express.static('uploads'));
 app.use('/api/user', userRoutes);
 console.log('User routes mounted');
-
-//  JWT Middleware
-const verifyToken = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).json({ error: "Access denied" });
-
-  try {
-    const verified = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = verified;
-    next();
-  } catch {
-    res.status(400).json({ error: "Invalid token" });
-  }
-};
-
-// Protected route
-app.get('/api/profile', verifyToken, async (req, res) => {
-  const user = await prisma.user.findUnique({
-    where: { id: req.user.userId },
-  });
-
-  const onboardingComplete = user.location && user.sports && user.profilePicturePath;
-
-  res.json({
-    user,
-    onboardingComplete: Boolean(onboardingComplete),
-  });
-});
 
 // Test route
 app.get('/', (req, res) => {

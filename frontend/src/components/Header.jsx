@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 function Header() {
   const { user, logout } = useContext(UserContext);
   const [authType, setAuthType] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,7 +22,7 @@ function Header() {
 
   const handleLogout = () => {
     logout();
-    navigate("/"); 
+    navigate("/");
   };
 
   return (
@@ -29,10 +30,20 @@ function Header() {
       <img src={Logo} alt="train together logo" className="logo-img" />
       <nav className="nav-links">
         {user ? (
-          <>
-            <span>Welcome, {user.firstName}</span>
-            <button className="logout-btn" onClick={handleLogout}>Logout</button>
-          </>
+          <div
+            className="user-menu"
+            onMouseEnter={() => setMenuOpen(true)}
+            onMouseLeave={() => setMenuOpen(false)}
+          >
+            <span>{user.firstName}</span>
+            {menuOpen && (
+              <div className="dropdown">
+                <button onClick={() => navigate("/dashboard")}>Dashboard</button>
+                <button onClick={() => navigate("/profile")}>Profile</button>
+                <button onClick={handleLogout}>Logout</button>
+              </div>
+            )}
+          </div>
         ) : (
           <button className="login-btn" onClick={() => openModal("login")}>
             Login

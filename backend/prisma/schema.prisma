@@ -19,5 +19,6 @@ model User {
   level     String?
   sports    Json?
   profilePicturePath String?
+  onboardingComplete  Boolean  @default(false)
   createdAt DateTime @default(now())
 }

@@ -18,7 +18,7 @@ function HomePage() {
     }
 
     try {
-      const res = await axios.get("/api/profile", {
+      const res = await axios.get("/api/user/profile", {
         headers: { Authorization: `Bearer ${token}` },
       });
 

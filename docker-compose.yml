@@ -28,9 +28,8 @@ services:
       - ./backend/src:/app/src
       - ./backend/prisma:/app/prisma
       - ./backend/.env:/app/.env
-    environment:
-      - DATABASE_URL=postgresql://trainuser:trainpassword@db:5432/traindb
-      - JWT_SECRET=0eb8ca4930f829d526452d8e48f2f753d0e01c627ec3d4d7d92d69b0bf285a30
+    env_file:
+      - ./backend/.env
     depends_on:
       - db
 

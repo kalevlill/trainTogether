@@ -10,7 +10,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 40px;
-    min-height: calc(100vh - );
+    min-height: calc(100vh - 80);
 }
 
 .partner-text {

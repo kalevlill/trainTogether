@@ -9,6 +9,7 @@ import { UserProvider } from "./components/context/UserContext";
 import Onboarding from "./pages/Onboarding";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   return (
@@ -32,6 +33,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <ProfilePage />
                 </ProtectedRoute>
               }
             />
