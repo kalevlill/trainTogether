@@ -11,6 +11,10 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// ✅ Add this line for parsing URL-encoded form data (important for multer + FormData)
+app.use(express.urlencoded({ extended: true }));
+
 app.use('/uploads', express.static('uploads'));
 app.use('/api/user', userRoutes);
 console.log('User routes mounted');

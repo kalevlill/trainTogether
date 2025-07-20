@@ -21,7 +21,7 @@ export function UserProvider({ children }) {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log(res.data);
-        setUser(res.data.user);
+        setUser(res.data); // earlier setUser(res.data.user);
       } catch {
         localStorage.removeItem("token");
         setUser(null);
