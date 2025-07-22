@@ -78,8 +78,6 @@ router.get("/profile", authMiddleware, async (req, res) => {
 
 // Update user profile
 router.put("/profile", authMiddleware, upload.any(), async (req, res) => {
-  console.log("Incoming form data:", req.body);
-  console.log("Incoming files:", req.files);
   try {
     const {
       firstName,
@@ -94,70 +92,108 @@ router.put("/profile", authMiddleware, upload.any(), async (req, res) => {
       newPassword,
       confirmPassword,
     } = req.body;
-
     const profilePicture = req.files?.find(
       (file) => file.fieldname === "profilePicture"
     );
-
-    const updateData = {
-      firstName,
-      lastName,
-      location,
-      level,
-      gender,
-      email,
-    };
-
+    const updateData = {};
+    const warnings = [];
+    // === Basisfelder validieren und bereinigen ===
+    if (typeof firstName === "string" && firstName.trim() !== "") {
+      updateData.firstName = firstName.trim();
+    } else {
+      warnings.push("Missing or empty firstName");
+    }
+    if (typeof lastName === "string" && lastName.trim() !== "") {
+      updateData.lastName = lastName.trim();
+    } else {
+      warnings.push("Missing or empty lastName");
+    }
+    if (typeof location === "string" && location.trim() !== "") {
+      updateData.location = location.trim();
+    }
+    if (typeof level === "string" && level.trim() !== "") {
+      updateData.level = level.trim();
+    }
+    if (typeof gender === "string" && gender.trim() !== "") {
+      updateData.gender = gender.trim();
+    }
+    if (typeof email === "string" && email.trim() !== "") {
+      updateData.email = email.trim();
+    }
+    // === Geburtsdatum prüfen ===
     if (birthday) {
-      updateData.birthday = new Date(birthday);
+      const parsedDate = new Date(birthday);
+      if (!isNaN(parsedDate)) {
+        updateData.birthday = parsedDate;
+      } else {
+        warnings.push(`Invalid birthday format: "${birthday}"`);
+      }
     }
-
+    // === Sports-Array prüfen ===
     if (sports) {
-      updateData.sports = JSON.parse(sports);
+      try {
+        const parsedSports = JSON.parse(sports);
+        if (Array.isArray(parsedSports)) {
+          updateData.sports = parsedSports;
+        } else {
+          warnings.push("sports is not an array");
+        }
+      } catch (err) {
+        warnings.push("Invalid JSON format in sports field");
+      }
     }
-
+    // === Passwort-Änderung prüfen ===
     if (currentPassword || newPassword || confirmPassword) {
       if (!currentPassword || !newPassword || !confirmPassword) {
-        return res
-          .status(400)
-          .json({ error: "All password fields are required." });
+        return res.status(400).json({
+          error: "All password fields (current, new, confirm) are required.",
+        });
       }
-
       const user = await prisma.user.findUnique({
         where: { id: req.user.userId },
       });
-
-      const passwordMatch = await bcrypt.compare(
-        currentPassword,
-        user.password
-      );
+      const passwordMatch = await bcrypt.compare(currentPassword, user.password);
       if (!passwordMatch) {
-        return res
-          .status(401)
-          .json({ error: "Current password is incorrect." });
+        return res.status(401).json({ error: "Current password is incorrect." });
       }
-
       if (newPassword !== confirmPassword) {
         return res.status(400).json({ error: "New passwords do not match." });
       }
-
       const hashedPassword = await bcrypt.hash(newPassword, 10);
       updateData.password = hashedPassword;
     }
-
+    // === Profilbild zu S3 hochladen ===
     if (profilePicture) {
-      updateData.profilePicturePath = profilePicture.path;
+      try {
+        console.log("Uploading profile picture to S3:", profilePicture.originalname);
+        const s3Response = await uploadToS3(profilePicture);
+        console.log("S3 upload successful:", s3Response.Location);
+        updateData.profilePicturePath = s3Response.Location;
+      } catch (err) {
+        console.error("S3 upload failed:", err);
+        warnings.push("Failed to upload profile picture");
+      }
     }
-
+    // === Wenn keine gültigen Daten enthalten sind ===
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({
+        error: "No valid fields to update.",
+        warnings,
+      });
+    }
+    console.log("Updating user with data:", updateData);
     const updatedUser = await prisma.user.update({
       where: { id: req.user.userId },
       data: updateData,
     });
-
-    res.json(updatedUser);
+    res.json({
+      message: "Profile updated successfully.",
+      user: updatedUser,
+      warnings,
+    });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to update profile." });
+    console.error("Profile update failed:", err);
+    res.status(500).json({ error: "Failed to update profile.", details: err.message });
   }
 });
 
