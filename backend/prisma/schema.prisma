@@ -21,4 +21,14 @@ model User {
   profilePicturePath String?
   onboardingComplete  Boolean  @default(false)
   createdAt DateTime @default(now())
+
+  posts              Post[]
+}
+
+model Post {
+  id          String   @id @default(cuid())
+  description String
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
 }

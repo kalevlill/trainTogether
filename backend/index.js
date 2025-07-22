@@ -5,19 +5,35 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const userRoutes = require('./src/routes/user');
+const postRoutes = require('./src/routes/post'); // ✅ Import post routes
 
 const prisma = new PrismaClient();
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-
-// ✅ Add this line for parsing URL-encoded form data (important for multer + FormData)
 app.use(express.urlencoded({ extended: true }));
-
 app.use('/uploads', express.static('uploads'));
+
+// ✅ JWT Middleware
+app.use((req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader?.startsWith("Bearer ")) {
+    const token = authHeader.split(" ")[1];
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = { id: decoded.userId, firstName: decoded.firstName };
+    } catch (err) {
+      console.warn("Invalid token");
+    }
+  }
+  next();
+});
+
+// ✅ Mount routes
 app.use('/api/user', userRoutes);
-console.log('User routes mounted');
+app.use('/api/posts', postRoutes); // ✅ <--- This was missing!
+console.log('User and Post routes mounted');
 
 // Test route
 app.get('/', (req, res) => {
