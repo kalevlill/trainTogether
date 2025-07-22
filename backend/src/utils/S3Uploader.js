@@ -15,6 +15,7 @@ const uploadToS3 = (file) => {
     Key: `${Date.now()}-${file.originalname}`,
     Body: fileContent,
     ContentType: file.mimetype,
+    /* ACL: 'public-read', */
   };
 
   return s3.upload(params).promise();

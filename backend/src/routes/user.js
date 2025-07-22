@@ -2,7 +2,9 @@ const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 const multer = require("multer");
 const bcrypt = require("bcrypt");
+const fs = require("fs");
 const authMiddleware = require("../middleware/authMiddleware");
+const uploadToS3 = require("../utils/S3Uploader");
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -27,16 +29,31 @@ router.post("/onboarding", authMiddleware, upload.any(), async (req, res) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
+    const updateData = {
+      location,
+      level,
+      sports: JSON.parse(sports),
+      gender,
+      birthday: birthday ? new Date(birthday) : null,
+    };
+
+    if (profilePicture) {
+      try {
+        console.log("Uploading onboarding profile picture to S3:", profilePicture.originalname);
+        const s3Response = await uploadToS3(profilePicture);
+        console.log("S3 upload successful:", s3Response.Location);
+        updateData.profilePicturePath = s3Response.Location;
+
+        // delete local file after upload
+        fs.unlinkSync(profilePicture.path);
+      } catch (err) {
+        console.error("S3 upload failed during onboarding:", err);
+      }
+    }
+
     await prisma.user.update({
       where: { id: userId },
-      data: {
-        location,
-        level,
-        sports: JSON.parse(sports),
-        gender,
-        birthday: birthday ? new Date(birthday) : null,
-        profilePicturePath: profilePicture?.path || null,
-      },
+      data: updateData,
     });
 
     res.json({ message: "Onboarding data saved." });

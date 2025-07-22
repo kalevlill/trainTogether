@@ -86,10 +86,10 @@ function ProfilePage() {
     data.append("email", formData.email);
 
     if (wantsToChangePassword) {
-  data.append("currentPassword", formData.currentPassword);
-  data.append("newPassword", formData.newPassword);
-  data.append("confirmPassword", formData.confirmPassword);
-}
+      data.append("currentPassword", formData.currentPassword);
+      data.append("newPassword", formData.newPassword);
+      data.append("confirmPassword", formData.confirmPassword);
+    }
 
     if (formData.profilePicture) {
       data.append("profilePicture", formData.profilePicture);
@@ -204,7 +204,11 @@ function ProfilePage() {
           <div className="profile-picture-container">
             {formData.profilePicturePath ? (
               <img
-                src={`http://localhost:4000/${formData.profilePicturePath}`}
+                src={
+                  formData.profilePicturePath.startsWith("http")
+                    ? formData.profilePicturePath
+                    : `http://localhost:4000/${formData.profilePicturePath}`
+                }
                 alt="Profile"
                 className="profile-picture-preview"
               />
