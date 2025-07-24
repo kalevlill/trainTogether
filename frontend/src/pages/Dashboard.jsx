@@ -111,10 +111,10 @@ function Dashboard() {
                 alt="Profile"
                 className="full-image"
               />
-              <div className="overlay-text">
-                {post.user.firstName}, {calculateAge(post.user.birthday)}
-              </div>
             </div>
+            {<div className="overlay-text">
+              {post.user.firstName}, {calculateAge(post.user.birthday)}
+            </div>}
           </div>
         ))}
       </div>

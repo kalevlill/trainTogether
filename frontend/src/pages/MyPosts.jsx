@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "../style/MyPosts.css"; 
+import "../style/MyPosts.css";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
@@ -75,26 +75,50 @@ function MyPosts() {
                 alt="Profile"
                 className="full-image"
               />
-              <div className="overlay-text">{post.user.firstName}</div>
+              <div className="overlay-text">
+                {post.user.firstName}, {post.user.age}
+              </div>
             </div>
 
-            {editingPostId === post.id ? (
-              <>
-                <textarea
-                  value={editedDescription}
-                  onChange={(e) => setEditedDescription(e.target.value)}
-                  className="edit-textarea"
-                />
-                <button className="post-action-btn" onClick={() => handleUpdate(post.id)}>Save</button>
-                <button className="post-action-btn" onClick={() => setEditingPostId(null)}>Cancel</button>
-              </>
-            ) : (
-              <>
-                <p className="post-description">{post.description}</p>
-                <button className="post-action-btn" onClick={() => handleEdit(post)}>Edit</button>
-                <button className="post-action-btn" onClick={() => handleDelete(post.id)}>Delete</button>
-              </>
-            )}
+            <div className="content-wrapper">
+              {editingPostId === post.id ? (
+                <>
+                  <textarea
+                    value={editedDescription}
+                    onChange={(e) => setEditedDescription(e.target.value)}
+                    className="edit-textarea"
+                  />
+                  <button
+                    className="post-action-btn"
+                    onClick={() => handleUpdate(post.id)}
+                  >
+                    Save
+                  </button>
+                  <button
+                    className="post-action-btn"
+                    onClick={() => setEditingPostId(null)}
+                  >
+                    Cancel
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p className="post-description">{post.description}</p>
+                  <button
+                    className="post-action-btn"
+                    onClick={() => handleEdit(post)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="post-action-btn"
+                    onClick={() => handleDelete(post.id)}
+                  >
+                    Delete
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         ))}
       </div>

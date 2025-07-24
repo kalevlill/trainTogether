@@ -33,7 +33,7 @@ router.get("/", async (req, res) => {
 // Create a post
 router.post("/", authMiddleware, async (req, res) => {
   const { description } = req.body;
-  const userId = parseInt(req.user?.userId); // Convert to Int
+  const userId = parseInt(req.user?.userId); 
 
   if (!description) {
     return res.status(400).json({ error: "Description is required" });
@@ -56,7 +56,7 @@ router.post("/", authMiddleware, async (req, res) => {
 // Get posts by the currently authenticated user
 router.get("/mine", authMiddleware, async (req, res) => {
   try {
-    const userId = parseInt(req.user.userId); // Convert to Int
+    const userId = parseInt(req.user.userId); 
 
     const posts = await prisma.post.findMany({
       where: { userId },
@@ -85,7 +85,7 @@ router.get("/mine", authMiddleware, async (req, res) => {
 // Delete a post
 router.delete("/:id", authMiddleware, async (req, res) => {
   const postId = req.params.id;
-  const userId = parseInt(req.user.userId); // Convert to Int
+  const userId = parseInt(req.user.userId); 
 
   try {
     const post = await prisma.post.findUnique({
