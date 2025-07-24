@@ -54,6 +54,7 @@ function Header() {
                     Dashboard
                   </button>
                   <button onClick={() => navigate("/profile")}>Profile</button>
+                  <button onClick={() => navigate("/myposts")}>My Posts</button>
                   <button onClick={handleLogout}>Logout</button>
                 </div>
               )}

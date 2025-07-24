@@ -11,6 +11,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import ProfilePage from "./pages/ProfilePage";
 import DashboardProvider from "./components/context/DashboardContext";
+import MyPosts from "./pages/MyPosts";
 
 function App() {
   return (
@@ -43,6 +44,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <ProfilePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/myposts"
+                element={
+                  <ProtectedRoute>
+                    <MyPosts />
                   </ProtectedRoute>
                 }
               />

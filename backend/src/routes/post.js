@@ -33,7 +33,7 @@ router.get("/", async (req, res) => {
 // Create a post
 router.post("/", authMiddleware, async (req, res) => {
   const { description } = req.body;
-  const userId = req.user?.userId;
+  const userId = parseInt(req.user?.userId); // Convert to Int
 
   if (!description) {
     return res.status(400).json({ error: "Description is required" });
@@ -50,6 +50,60 @@ router.post("/", authMiddleware, async (req, res) => {
   } catch (err) {
     console.error("Error creating post:", err);
     res.status(500).json({ error: "Failed to create post" });
+  }
+});
+
+// Get posts by the currently authenticated user
+router.get("/mine", authMiddleware, async (req, res) => {
+  try {
+    const userId = parseInt(req.user.userId); // Convert to Int
+
+    const posts = await prisma.post.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+      include: {
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            birthday: true,
+            location: true,
+            level: true,
+            profilePicturePath: true,
+          },
+        },
+      },
+    });
+
+    res.json(posts);
+  } catch (err) {
+    console.error("Error fetching user's posts:", err);
+    res.status(500).json({ error: "Failed to fetch user's posts" });
+  }
+});
+
+// Delete a post
+router.delete("/:id", authMiddleware, async (req, res) => {
+  const postId = req.params.id;
+  const userId = parseInt(req.user.userId); // Convert to Int
+
+  try {
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+    });
+
+    if (!post || post.userId !== userId) {
+      return res.status(403).json({ error: "Unauthorized or post not found" });
+    }
+
+    await prisma.post.delete({
+      where: { id: postId },
+    });
+
+    res.json({ message: "Post deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting post:", err);
+    res.status(500).json({ error: "Failed to delete post" });
   }
 });
 

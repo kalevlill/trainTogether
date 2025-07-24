@@ -5,7 +5,7 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const userRoutes = require('./src/routes/user');
-const postRoutes = require('./src/routes/post'); // ✅ Import post routes
+const postRoutes = require('./src/routes/post'); 
 
 const prisma = new PrismaClient();
 const app = express();
@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));
 
-// ✅ JWT Middleware
+
 app.use((req, res, next) => {
   const authHeader = req.headers.authorization;
   if (authHeader?.startsWith("Bearer ")) {
@@ -30,17 +30,17 @@ app.use((req, res, next) => {
   next();
 });
 
-// ✅ Mount routes
+
 app.use('/api/user', userRoutes);
-app.use('/api/posts', postRoutes); // ✅ <--- This was missing!
+app.use('/api/posts', postRoutes); 
 console.log('User and Post routes mounted');
 
-// Test route
+
 app.get('/', (req, res) => {
   res.send('API is running');
 });
 
-// Register route
+
 app.post('/api/register', async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
 
@@ -65,7 +65,7 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
-// Login route
+
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
 
