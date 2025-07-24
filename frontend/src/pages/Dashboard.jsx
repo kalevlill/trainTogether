@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import "../style/Dashboard.css";
+import { DashboardContext } from "../components/context/DashboardContext";
+import Notification from "../components/Notification"; 
 
 axios.defaults.baseURL = "http://localhost:4000";
 
 function Dashboard() {
-  const [showForm, setShowForm] = useState(false);
+  const { showForm, toggleForm } = useContext(DashboardContext);
   const [description, setDescription] = useState("");
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
-
-  const toggleForm = () => setShowForm((prev) => !prev);
+  const [notification, setNotification] = useState(""); 
 
   const fetchUser = async () => {
     try {
@@ -57,28 +58,23 @@ function Dashboard() {
           },
         }
       );
-      
-      setPosts([
-        {
-          ...res.data,
-          user, 
-        },
-        ...posts,
-      ]);
+
+      setPosts([{ ...res.data, user }, ...posts]);
       setDescription("");
-      setShowForm(false);
+      setNotification("Post created ");
+      toggleForm(); 
     } catch (err) {
       console.error("Failed to create post:", err);
+      setNotification("Error: Could not create post");
     }
   };
 
   return (
     <div className="dashboard-container">
-      <button className="create-post-button" onClick={toggleForm}>
-        Create Post
-      </button>
+      {notification && (
+        <Notification message={notification} onClose={() => setNotification("")} />
+      )}
 
-      {/* Modal Form */}
       {showForm && user && (
         <div className="modal-overlay" onClick={toggleForm}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -106,25 +102,20 @@ function Dashboard() {
         </div>
       )}
 
-      {/* Posts Grid */}
       <div className="posts-grid">
-  {posts.map((post) => (
-    <div className="post-card" key={post.id}>
-      <img
-        src={post.user.profilePicturePath}
-        alt="Profile"
-        className="post-avatar-large"
-      />
-
-      <div className="user-details">
-        <h3>
-          {post.user.firstName}, {calculateAge(post.user.birthday)}
-        </h3>
-        <p>{post.user.location}</p>
-        <span className="level-badge">{post.user.level}</span>
-      </div>
-      <p className="post-description">{post.description}</p>
-    </div>
+        {posts.map((post) => (
+          <div className="post-card" key={post.id}>
+            <div className="image-wrapper">
+              <img
+                src={post.user.profilePicturePath}
+                alt="Profile"
+                className="full-image"
+              />
+              <div className="overlay-text">
+                {post.user.firstName}, {calculateAge(post.user.birthday)}
+              </div>
+            </div>
+          </div>
         ))}
       </div>
     </div>
