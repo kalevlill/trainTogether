@@ -10,7 +10,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 40px;
-    min-height: calc(100vh - 80);
+    min-height: calc(100vh - 80px);
 }
 
 .partner-text {
@@ -66,8 +66,9 @@
   display: flex;
   justify-content: center;
   gap: 100px;
-  margin-top: 20px;
-  padding: 20px 0;
+  padding: 0;
+  position: relative;
+  top: -40px; 
 }
 
 .icon-item {
