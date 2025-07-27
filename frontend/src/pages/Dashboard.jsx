@@ -3,10 +3,12 @@ import axios from "axios";
 import "../style/Dashboard.css";
 import { DashboardContext } from "../components/context/DashboardContext";
 import Notification from "../components/Notification"; 
+import { useBodyClass } from "../hooks/useBodyClass";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
 function Dashboard() {
+   useBodyClass("dashboard-page");
   const { showForm, toggleForm } = useContext(DashboardContext);
   const [description, setDescription] = useState("");
   const [user, setUser] = useState(null);

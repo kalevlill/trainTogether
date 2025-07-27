@@ -1,14 +1,31 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../style/HomePage.css";
 import { IoLocation } from "react-icons/io5";
 import { LiaCalendarAlt } from "react-icons/lia";
 import { IoTrophySharp } from "react-icons/io5";
-import illustration from "../images/zumba.jpg";
+import jogging from "../images/jogging.jpg";
+import gym from "../images/gym.jpg";
+import hiking from "../images/hiking.jpg";
 
 function HomePage() {
   const navigate = useNavigate();
+
+  const slides = [
+    { src: jogging, text: "Run Together, Achieve More" },
+    { src: gym, text: "Train Smart, Train Together" },
+    { src: hiking, text: "Explore Trails, Build Bonds" },
+  ];
+
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [slides.length]);
 
   const handleGetStarted = async () => {
     const token = localStorage.getItem("token");
@@ -41,12 +58,20 @@ function HomePage() {
             <span className="blue-text">Find Your</span> <br />
             <span className="yellow-text">Training <br /> Partner</span>
           </h1>
-          <p>Connect with local athletes and <br /> plan your training together effectively</p>
-          <button className="get-started-btn" onClick={handleGetStarted}>Get Started</button>
+          <p>
+            Connect with local athletes and <br />
+            plan your training together effectively
+          </p>
+          <button className="get-started-btn" onClick={handleGetStarted}>
+            Get Started
+          </button>
         </div>
 
         <div className="training-image">
-          <img src={illustration} alt="sport" />
+          <img src={slides[currentSlide].src} alt="sport" />
+          <div className="image-overlay">
+            <h1>{slides[currentSlide].text}</h1>
+          </div>
         </div>
       </div>
 

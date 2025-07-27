@@ -9,6 +9,7 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  padding-top: 20px;
 }
 
 .modal {
@@ -20,6 +21,8 @@
   border-radius: 12px;
   width: 100%;
   max-width: 400px;
+  max-height: 80vh;
+  transform: scale(0.9);
   margin: auto;
   height: auto;
   display: block;
@@ -61,7 +64,7 @@
 .modal input {
   width: 92%;
   margin: 0 auto 1rem auto;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 1rem;
   border-radius: 8px;
   border: none;
   background: #2b2b2b;
@@ -133,7 +136,7 @@ button.primary-btn {
   width: 100%;
   height: auto;
   display: block;
-  margin: 0 auto -3.5rem auto;
+  margin: -1rem auto -3.5rem auto;
   transition: transform 0.3s ease-in-out;
 }
 

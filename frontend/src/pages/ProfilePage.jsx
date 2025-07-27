@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FaImages } from "react-icons/fa6";
 import "../style/ProfilePage.css";
+import { useBodyClass } from "../hooks/useBodyClass";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
 function ProfilePage() {
+  useBodyClass("profile-page");
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",

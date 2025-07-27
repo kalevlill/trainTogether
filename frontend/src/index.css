@@ -68,3 +68,12 @@ button:focus-visible {
     margin: 0;
     padding: 0;
 }
+
+body.profile-page,
+body.register-page {
+  overflow: hidden;
+}
+
+body.dashboard-page {
+  overflow-y: auto;
+}

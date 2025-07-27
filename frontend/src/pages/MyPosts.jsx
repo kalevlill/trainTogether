@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../style/MyPosts.css";
+import { useBodyClass } from "../hooks/useBodyClass";
 
 axios.defaults.baseURL = "http://localhost:4000";
 
 function MyPosts() {
+  useBodyClass("dashboard-page");
   const [posts, setPosts] = useState([]);
   const [editingPostId, setEditingPostId] = useState(null);
   const [editedDescription, setEditedDescription] = useState("");
@@ -25,6 +27,13 @@ function MyPosts() {
   useEffect(() => {
     fetchMyPosts();
   }, []);
+
+  const calculateAge = (birthday) => {
+    if (!birthday) return "";
+    const dob = new Date(birthday);
+    const ageDifMs = Date.now() - dob.getTime();
+    return Math.floor(ageDifMs / (1000 * 60 * 60 * 24 * 365.25));
+  };
 
   const handleEdit = (post) => {
     setEditingPostId(post.id);
@@ -76,7 +85,7 @@ function MyPosts() {
                 className="full-image"
               />
               <div className="overlay-text">
-                {post.user.firstName}, {post.user.age}
+                {post.user.firstName}, {calculateAge(post.user.birthday)}
               </div>
             </div>
 
