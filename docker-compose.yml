@@ -23,7 +23,6 @@ services:
     build: ./backend
     ports:
       - "4000:4000"
-      - "5555:5555"
     volumes:
       - ./backend/src:/app/src
       - ./backend/prisma:/app/prisma
@@ -32,6 +31,17 @@ services:
       - ./backend/.env
     depends_on:
       - db
+
+  frontend:
+    build: ./frontend
+    container_name: traintogether-frontend
+    ports:
+      - "5173:5173"
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
 
 volumes:
   pgdata:
