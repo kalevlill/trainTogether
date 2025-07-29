@@ -12,6 +12,7 @@ import Dashboard from "./pages/Dashboard";
 import ProfilePage from "./pages/ProfilePage";
 import DashboardProvider from "./components/context/DashboardContext";
 import MyPosts from "./pages/MyPosts";
+import PostProfilePage from "./pages/PostProfilePage";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/register" element={<Auth />} />
               <Route path="/login" element={<Auth type="login" />} />
+
               <Route
                 path="/onboarding"
                 element={
@@ -31,6 +33,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+
               <Route
                 path="/dashboard"
                 element={
@@ -47,11 +50,20 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+
               <Route
                 path="/myposts"
                 element={
                   <ProtectedRoute>
                     <MyPosts />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/posts/:id"
+                element={
+                  <ProtectedRoute>
+                    <PostProfilePage />
                   </ProtectedRoute>
                 }
               />

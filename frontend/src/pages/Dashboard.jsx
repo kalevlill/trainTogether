@@ -4,11 +4,13 @@ import "../style/Dashboard.css";
 import { DashboardContext } from "../components/context/DashboardContext";
 import Notification from "../components/Notification"; 
 import { useBodyClass } from "../hooks/useBodyClass";
+import { useNavigate } from "react-router-dom"; 
 
 axios.defaults.baseURL = "http://localhost:4000";
 
 function Dashboard() {
-   useBodyClass("dashboard-page");
+  useBodyClass("dashboard-page");
+  const navigate = useNavigate(); 
   const { showForm, toggleForm } = useContext(DashboardContext);
   const [description, setDescription] = useState("");
   const [user, setUser] = useState(null);
@@ -106,7 +108,12 @@ function Dashboard() {
 
       <div className="posts-grid">
         {posts.map((post) => (
-          <div className="post-card" key={post.id}>
+          <div
+            className="post-card"
+            key={post.id}
+            onClick={() => navigate(`/posts/${post.id}`)}
+            style={{ cursor: "pointer" }} 
+          >
             <div className="image-wrapper">
               <img
                 src={post.user.profilePicturePath}
@@ -114,9 +121,9 @@ function Dashboard() {
                 className="full-image"
               />
             </div>
-            {<div className="overlay-text">
+            <div className="overlay-text">
               {post.user.firstName}, {calculateAge(post.user.birthday)}
-            </div>}
+            </div>
           </div>
         ))}
       </div>

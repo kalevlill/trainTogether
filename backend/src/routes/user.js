@@ -23,7 +23,7 @@ router.post("/onboarding", authMiddleware, upload.any(), async (req, res) => {
     const profilePicture = req.files?.find(
       (file) => file.fieldname === "profilePicture"
     );
-    const userId = req.user.userId;
+    const userId = req.user.id;
 
     if (!userId) {
       return res.status(401).json({ error: "Unauthorized" });
@@ -67,7 +67,7 @@ router.post("/onboarding", authMiddleware, upload.any(), async (req, res) => {
 router.get("/profile", authMiddleware, async (req, res) => {
   try {
     const user = await prisma.user.findUnique({
-      where: { id: req.user.userId },
+      where: { id: req.user.id },  
       select: {
         firstName: true,
         lastName: true,
@@ -167,7 +167,7 @@ router.put("/profile", authMiddleware, upload.any(), async (req, res) => {
         });
       }
       const user = await prisma.user.findUnique({
-        where: { id: req.user.userId },
+        where: { id: req.user.id },
       });
       const passwordMatch = await bcrypt.compare(currentPassword, user.password);
       if (!passwordMatch) {
@@ -200,7 +200,7 @@ router.put("/profile", authMiddleware, upload.any(), async (req, res) => {
     }
     console.log("Updating user with data:", updateData);
     const updatedUser = await prisma.user.update({
-      where: { id: req.user.userId },
+      where: { id: req.user.id },
       data: updateData,
     });
     res.json({
