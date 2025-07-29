@@ -1,7 +1,8 @@
  :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Open Sans", sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  font-style: normal;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
@@ -76,4 +77,104 @@ body.register-page {
 
 body.dashboard-page {
   overflow-y: auto;
+}
+
+/* Mobile Devices */
+@media (min-width: 319px) and (max-width: 480px) {
+  body {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 1.8em;
+  }
+
+  h2 {
+    font-size: 1.4em;
+  }
+
+  p, a, button {
+    font-size: 14px;
+  }
+
+  .container {
+    padding: 0 10px;
+  }
+}
+
+/* iPads and Tablets */
+@media (min-width: 481px) and (max-width: 1200px) {
+  body {
+    padding: 15px;
+    font-size: 15px;
+  }
+
+  h1 {
+    font-size: 2.2em;
+  }
+
+  h2 {
+    font-size: 1.6em;
+  }
+
+  p, a, button {
+    font-size: 15px;
+  }
+
+  .container {
+    padding: 0 15px;
+  }
+}
+
+/* Laptops */
+@media (min-width: 1201px) and (max-width: 1600px) {
+  body {
+    padding: 20px;
+    font-size: 16px;
+  }
+
+  h1 {
+    font-size: 2.6em;
+  }
+
+  h2 {
+    font-size: 1.8em;
+  }
+
+  p, a, button {
+    font-size: 16px;
+  }
+
+  .container {
+    padding: 0 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+}
+
+/* Desktops */
+@media (min-width: 1601px) {
+  body {
+    padding: 30px;
+    font-size: 18px;
+  }
+
+  h1 {
+    font-size: 3.2em;
+  }
+
+  h2 {
+    font-size: 2em;
+  }
+
+  p, a, button {
+    font-size: 18px;
+  }
+
+  .container {
+    padding: 0 30px;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
 }
