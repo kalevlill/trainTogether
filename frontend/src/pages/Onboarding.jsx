@@ -6,6 +6,7 @@ import "../style/Onboarding.css";
 import { FaChevronDown } from "react-icons/fa";
 import BirthdayPicker from "../components/BirthdayPicker";
 import sportsList from "../data/sports.json";
+import Notification from "../components/Notification"; 
 
 function Onboarding() {
   const [location, setLocation] = useState("");
@@ -21,6 +22,7 @@ function Onboarding() {
     year: "1990",
   });
   const [error, setError] = useState("");
+  const [showNotification, setShowNotification] = useState(false); 
 
   const navigate = useNavigate();
 
@@ -36,7 +38,8 @@ function Onboarding() {
           "https://wft-geo-db.p.rapidapi.com/v1/geo/cities",
           {
             headers: {
-              "X-RapidAPI-Key": "3436771910msh3cf95fb8c0f52b0p1622e3jsn1cfbdab3a0c7",
+              "X-RapidAPI-Key":
+                "3436771910msh3cf95fb8c0f52b0p1622e3jsn1cfbdab3a0c7",
               "X-RapidAPI-Host": "wft-geo-db.p.rapidapi.com",
             },
             params: { namePrefix: query, limit: 5 },
@@ -52,15 +55,13 @@ function Onboarding() {
     return () => clearTimeout(debounce);
   }, [query]);
 
-  // ✅ Handle dropdown selection
-  const handleSelect = (e) => {
-    const selected = e.target.value;
-    if (selected && !sports.includes(selected)) {
-      setSports([...sports, selected]);
+  const handleSportChange = (sport) => {
+    if (!sports.includes(sport)) {
+      setSports([...sports, sport]);
     }
   };
 
-  const removeTag = (sport) => {
+  const removeSport = (sport) => {
     setSports(sports.filter((s) => s !== sport));
   };
 
@@ -93,7 +94,8 @@ function Onboarding() {
         },
       });
 
-      navigate("/dashboard");
+      setShowNotification(true); 
+      setTimeout(() => navigate("/dashboard"), 2200); 
     } catch (error) {
       console.error(error);
       setError("Something went wrong. Please try again.");
@@ -102,6 +104,13 @@ function Onboarding() {
 
   return (
     <div className="onboarding-dashboard">
+      {showNotification && (
+        <Notification
+          message="Onboarding complete!"
+          onClose={() => setShowNotification(false)}
+        />
+      )}
+
       <form onSubmit={handleSubmit} className="onboarding-form-layout">
         <div className="onboarding-section">
           <h3>Basic Info</h3>
@@ -159,31 +168,41 @@ function Onboarding() {
             <FaChevronDown className="select-arrow" />
           </div>
 
-          {/* BirthdayPicker Component  */}
           <BirthdayPicker value={birthday} onChange={setBirthday} />
         </div>
 
         <div className="onboarding-section">
           <h3>Sports Preferences</h3>
+
           <div className="select-wrapper">
-            <select onChange={handleSelect} value="">
+            <select
+              onChange={(e) => handleSportChange(e.target.value)}
+              value=""
+            >
               <option value="" disabled>
                 Select a sport
               </option>
-              {sportsList.map((sport) => (
-                <option key={sport} value={sport}>
-                  {sport}
-                </option>
-              ))}
+              {sportsList
+                .filter((s) => !sports.includes(s))
+                .map((sport) => (
+                  <option key={sport} value={sport}>
+                    {sport}
+                  </option>
+                ))}
             </select>
-            <FaChevronDown className="select-arrow" />
           </div>
 
-          <div className="tags-container">
+          <div className="selected-sports">
             {sports.map((sport) => (
-              <div className="tag" key={sport}>
+              <div key={sport} className="sport-tag">
                 {sport}
-                <button type="button" onClick={() => removeTag(sport)}>x</button>
+                <button
+                  type="button"
+                  className="remove-sport"
+                  onClick={() => removeSport(sport)}
+                >
+                  ×
+                </button>
               </div>
             ))}
           </div>
