@@ -5,6 +5,7 @@ import { FaImages } from "react-icons/fa6";
 import "../style/Onboarding.css";
 import { FaChevronDown } from "react-icons/fa";
 import BirthdayPicker from "../components/BirthdayPicker";
+import sportsList from "../data/sports.json";
 
 function Onboarding() {
   const [location, setLocation] = useState("");
@@ -35,8 +36,7 @@ function Onboarding() {
           "https://wft-geo-db.p.rapidapi.com/v1/geo/cities",
           {
             headers: {
-              "X-RapidAPI-Key":
-                "3436771910msh3cf95fb8c0f52b0p1622e3jsn1cfbdab3a0c7",
+              "X-RapidAPI-Key": "3436771910msh3cf95fb8c0f52b0p1622e3jsn1cfbdab3a0c7",
               "X-RapidAPI-Host": "wft-geo-db.p.rapidapi.com",
             },
             params: { namePrefix: query, limit: 5 },
@@ -52,11 +52,16 @@ function Onboarding() {
     return () => clearTimeout(debounce);
   }, [query]);
 
-  const handleSportChange = (event) => {
-    const { value, checked } = event.target;
-    setSports((prev) =>
-      checked ? [...prev, value] : prev.filter((sport) => sport !== value)
-    );
+  // ✅ Handle dropdown selection
+  const handleSelect = (e) => {
+    const selected = e.target.value;
+    if (selected && !sports.includes(selected)) {
+      setSports([...sports, selected]);
+    }
+  };
+
+  const removeTag = (sport) => {
+    setSports(sports.filter((s) => s !== sport));
   };
 
   const handleSubmit = async (e) => {
@@ -160,30 +165,28 @@ function Onboarding() {
 
         <div className="onboarding-section">
           <h3>Sports Preferences</h3>
-          <label>
-            <input
-              type="checkbox"
-              value="Tennis"
-              onChange={handleSportChange}
-            />
-            Tennis
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              value="Football"
-              onChange={handleSportChange}
-            />
-            Football
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              value="Basketball"
-              onChange={handleSportChange}
-            />
-            Basketball
-          </label>
+          <div className="select-wrapper">
+            <select onChange={handleSelect} value="">
+              <option value="" disabled>
+                Select a sport
+              </option>
+              {sportsList.map((sport) => (
+                <option key={sport} value={sport}>
+                  {sport}
+                </option>
+              ))}
+            </select>
+            <FaChevronDown className="select-arrow" />
+          </div>
+
+          <div className="tags-container">
+            {sports.map((sport) => (
+              <div className="tag" key={sport}>
+                {sport}
+                <button type="button" onClick={() => removeTag(sport)}>x</button>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="onboarding-section">
