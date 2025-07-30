@@ -4,22 +4,25 @@ import { useNavigate } from "react-router-dom";
 import { FaImages } from "react-icons/fa6";
 import "../style/Onboarding.css";
 import { FaChevronDown } from "react-icons/fa";
+import BirthdayPicker from "../components/BirthdayPicker";
 
 function Onboarding() {
   const [location, setLocation] = useState("");
   const [query, setQuery] = useState("");
   const [citySuggestions, setCitySuggestions] = useState([]);
-
   const [level, setLevel] = useState("");
   const [sports, setSports] = useState([]);
   const [profilePicture, setProfilePicture] = useState(null);
   const [gender, setGender] = useState("");
-  const [birthday, setBirthday] = useState("");
+  const [birthday, setBirthday] = useState({
+    day: "15",
+    month: "June",
+    year: "1990",
+  });
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
-  // Fetch cities from GeoDB when typing
   useEffect(() => {
     if (query.length < 2) {
       setCitySuggestions([]);
@@ -36,10 +39,7 @@ function Onboarding() {
                 "3436771910msh3cf95fb8c0f52b0p1622e3jsn1cfbdab3a0c7",
               "X-RapidAPI-Host": "wft-geo-db.p.rapidapi.com",
             },
-            params: {
-              namePrefix: query,
-              limit: 5,
-            },
+            params: { namePrefix: query, limit: 5 },
           }
         );
         setCitySuggestions(response.data.data);
@@ -62,7 +62,9 @@ function Onboarding() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!location || !level || !gender || !birthday) {
+    const formattedBirthday = `${birthday.day}/${birthday.month}/${birthday.year}`;
+
+    if (!location || !level || !gender || !formattedBirthday) {
       setError("Please fill in all required fields.");
       return;
     }
@@ -72,7 +74,7 @@ function Onboarding() {
     formData.append("level", level);
     formData.append("sports", JSON.stringify(sports));
     formData.append("gender", gender);
-    formData.append("birthday", birthday);
+    formData.append("birthday", formattedBirthday);
 
     if (profilePicture) {
       formData.append("profilePicture", profilePicture);
@@ -99,7 +101,6 @@ function Onboarding() {
         <div className="onboarding-section">
           <h3>Basic Info</h3>
 
-          {/* City Autocomplete */}
           <div className="select-wrapper city-selector">
             <input
               type="text"
@@ -153,12 +154,8 @@ function Onboarding() {
             <FaChevronDown className="select-arrow" />
           </div>
 
-          <input
-            type="date"
-            max={new Date().toISOString().split("T")[0]}
-            value={birthday}
-            onChange={(e) => setBirthday(e.target.value)}
-          />
+          {/* BirthdayPicker Component  */}
+          <BirthdayPicker value={birthday} onChange={setBirthday} />
         </div>
 
         <div className="onboarding-section">
